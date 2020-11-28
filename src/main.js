@@ -6,10 +6,12 @@ import {Toast} from 'vant'
 import 'vant/lib/index.css';
 import http from '../http'
 import '@/assets/style.css'
+import VueCookies from 'vue-cookie'
 Vue.prototype.$http = http
 Vue.prototype.$msg = Toast
 
 Vue.use(vant)
+Vue.use(VueCookies)
 
 
 new Vue({

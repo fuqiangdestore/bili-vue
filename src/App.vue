@@ -1,12 +1,20 @@
 <template>
   <div id="app">
-<router-view></router-view>  
-</div>
+    <keep-alive>
+      <router-view v-if="$route.meta.keepalive"></router-view>
+    </keep-alive>
+      <router-view v-if="!$route.meta.keepalive"></router-view>
+      <tabbar-foot></tabbar-foot>
+  </div>
 </template>
 
 <script>
+import TabbarFoot from './components/common/TabbarFoot'
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    TabbarFoot
+  }
 }
 </script>
 
@@ -16,5 +24,8 @@ body{
   padding: 0;
   box-sizing: border-box;
   background-color: #f4f4f4;
+}
+p{
+  margin: 0;
 }
 </style>

@@ -2,7 +2,8 @@
 <div class="userinfo">
   <nav-bar></nav-bar>
   <img src="@/assets/bannerTop_new.png" class="backimg">
-  <user-detail></user-detail>
+  <user-detail :userInfo="model"></user-detail>
+  <user-article></user-article>
 </div>
   
 </template>
@@ -13,6 +14,11 @@ import UserDetail from '../components/userComponent/userDetail'
 import userArticle from '../components/userComponent/userArticle'
 
 export default {
+  data () {
+    return {
+      model: {}
+    }
+  },
   components: {
     NavBar,
     UserDetail,
@@ -20,8 +26,12 @@ export default {
   },
   methods: {
     async userData () {
-      const res = await this.$http.get() 
+      const res = await this.$http.get('/user/' + localStorage.getItem('id'))
+      this.model = res.data[0]
     }
+  },
+  created () {
+    this.userData()
   }
 }
 </script>

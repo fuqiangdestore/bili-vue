@@ -1,104 +1,92 @@
 <template>
-  <div class="commentParent">
-    <div v-for="(item,index) in commentList" :key="index">
-      <div class="commentItem">
-        <div class="userImg">
-          <img v-if="item.userinfo && item.userinfo.user_img" :src="item.userinfo.user_img" alt />
-          <img v-else src="@/assets/default_img.jpg" alt="">
-        </div>
-        <div class="commentContent">
+  <div id="commentPar">
+    <div v-for="(item, index) in commentList" :key="index">
+      <div class="comment_item">
+        <img src="../../assets/default_img.jpg" alt />
+        <div class="comment_content">
           <p>
-            <span v-if="item.userinfo">{{item.userinfo.name}}</span>
-            <span v-else>此用户无姓名</span>
+            <span>{{item.userinfo.name}}</span>
             <span>{{item.comment_date}}</span>
           </p>
           <div>
-            {{item.comment_content}}
-            <span class="publishs" @click="publishClick(item.comment_id)">回复</span>
+            <span>{{item.comment_content}}</span>
+            <span>回复</span>
           </div>
         </div>
       </div>
-     <div style="padding-left:8.333vw;"><comment-item @PostPublish="publishClick" :commentChild="item.child"></comment-item></div>
+      <div style="padding-left: 8vw;"><comment-item :commentChild="item.child"></comment-item></div>
     </div>
   </div>
 </template>
 
 <script>
-import commentItem from "./commentItem";
+import CommentItem from './commentItem'
 export default {
-    
   data() {
-      return {
-          commentList:null,
-      }
-  },
-  components: {
-    commentItem
+    return {
+      commentList: null
+    };
   },
   methods: {
     async commentData() {
-      const res = await this.$http.get("/comment/" + this.$route.params.id);
-      if(res.data){
-        this.$emit('lengthselect',res.data.length)
+      const res = await this.$http("/comment/" + this.$route.params.id);
+      if(res.data) {
+        this.$emit('lengthselect', res.data.length)
       }
-      this.commentList = this.changeCommentData(res.data)
+      this.commentList = this.changeCommentData(res.data);
+      console.log('改造前',res.data)
     },
     changeCommentData(data) {
       function fn(temp) {
-        let arr1 = [];
-        for (var i = 0; i < data.length; i++) {
-          if (data[i].parent_id == temp) {
-            arr1.push(data[i]);
+        let arr1 = []
+        for(var i = 0; i < data.length; i++) {
+          if(data[i].parent_id == temp) {
+            arr1.push(data[i])
             data[i].child = fn(data[i].comment_id);
           }
         }
-        return arr1;
+        return arr1
+        console.log('改造后的数据',arr1)
       }
-       return fn(null);
-    },
-    publishClick(id) {
-     this.$emit('publishClick',id)
+      return fn(null)
     }
   },
   created() {
     this.commentData();
+  },
+  components: {
+    CommentItem
   }
 };
 </script>
 
-<style lang="less">
-.commentParent {
-  padding: 2.778vw 2.778vw;
-  > div {
-    border-bottom: 0.278vw solid #e7e7e7;
-  }
-  .commentItem {
+<style lang="less" scoped>
+#commentPar {
+  width: 100%;
+  background-color: white;
+  .comment_item {
+    padding: 2vw;
     display: flex;
-    margin: 2.778vw 0;
-    .userImg {
-      margin-right: 2.778vw;
-      img {
-        width: 9.722vw;
-        height: 9.722vw;
-      }
+    img {
+      width: 25px;
+      height: 25px;
+      margin: 0 10px;
     }
-    .commentContent {
+    .comment_content {
       flex: 1;
-      position: relative;
       p {
-        font-size: 3.611vw;
+        font-size: 3.6vw;
+        margin-bottom: 1.3vw;
+        display: flex;
         color: #555;
+        justify-content: space-between;
+      }
+      div:nth-child(2) {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 1.389vw;
-      }
-      div {
-        font-size: 3.611vw;
-      }
-      .publishs{
-        position: absolute;
-        right: 0;
-        color: red;
+        span:nth-child(2) {
+          color: red;
+        }
       }
     }
   }

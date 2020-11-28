@@ -39,8 +39,8 @@ export default {
     },
     methods:{
         async AjaxInsert() {
-            let rulg = /^.{6,16}$/
-            if(rulg.test(this.model.username)&&rulg.test(this.model.password)){
+            // let rulg = /^.{6,16}$/
+            if((this.model.username)&&(this.model.password)){
                 const res =  await this.$http.post('/login',this.model)
                 this.$msg.fail(res.data.msg)
                 if(res.data.code == 301 || res.data.code == 302){
